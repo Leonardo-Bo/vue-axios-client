@@ -36,7 +36,7 @@ export const handleAxiosError = (
 
         for (const property in data) {
             const label = labels[property] || property;
-            const message = data[property] || 'Unknown error';
+            const message = data[property] ?? 'Unknown error';
             const formatted = `${label}: ${String(message)}`;
 
             errors.push(formatted);
