@@ -1,24 +1,12 @@
 <template>
-    <transition name="fade">
-        <div
-            v-if="isLoading"
-            class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40 dark:bg-black/60"
-            aria-live="polite"
-            role="status"
-        >
-            <div class="relative">
-                <div
-                    class="w-36 h-36 border-[6px] border-transparent border-t-white dark:border-t-gray-200 rounded-full animate-spin"
-                ></div>
-
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div
-                        class="w-5 h-5 bg-white dark:bg-gray-300 rounded-full animate-ping opacity-80"
-                    ></div>
-                </div>
-            </div>
-        </div>
-    </transition>
+    <div
+        v-if="isLoading"
+        class="loading-overlay"
+        aria-live="polite"
+        role="status"
+    >
+        <div class="loading-spinner"></div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -28,13 +16,34 @@ const isLoading = useAxiosLoading();
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
 }
 
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
+.loading-spinner {
+    width: 72px;
+    height: 72px;
+
+    border: 6px solid rgba(255, 255, 255, 0.25);
+    border-top-color: white;
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>

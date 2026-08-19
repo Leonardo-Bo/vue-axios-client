@@ -3,7 +3,7 @@ import axios, {
     type InternalAxiosRequestConfig,
 } from 'axios';
 
-import { setAxiosLoading } from './loading';
+import { startAxiosLoading, stopAxiosLoading } from './loading';
 import { showSuccessToast } from './toast';
 
 declare module 'axios' {
@@ -62,14 +62,14 @@ export function configureAxios(config: AxiosClientConfig): AxiosInstance {
     });
 
     http.interceptors.request.use((config) => {
-        setAxiosLoading(true);
+        startAxiosLoading();
 
         return addCsrfToken(config);
     });
 
     http.interceptors.response.use(
         (response) => {
-            setAxiosLoading(false);
+            stopAxiosLoading();
 
             if (response.config.successToast) {
                 showSuccessToast(response.config.successToast);
@@ -78,7 +78,7 @@ export function configureAxios(config: AxiosClientConfig): AxiosInstance {
             return response;
         },
         (error) => {
-            setAxiosLoading(false);
+            stopAxiosLoading();
 
             return Promise.reject(error);
         },
