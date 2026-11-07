@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 
-import { showDangerToast } from './toast';
+import { showDangerToast } from './toast.js';
 
 export interface AxiosErrorResponse {
     [key: string]: unknown;

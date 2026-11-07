@@ -2,13 +2,13 @@ export {
     configureAxios,
     useAxios,
     type AxiosClientConfig,
-} from './axios';
+} from './axios.js';
 
 export {
     handleAxiosError,
     type AxiosErrorResponse,
     type ErrorHandlerOptions,
-} from './errorHandler';
+} from './errorHandler.js';
 
 export {
     showToast,
@@ -23,7 +23,7 @@ export {
     type ToastOptions,
     type ToastStyle,
     type ToastType,
-} from './toast';
+} from './toast.js';
 
 export { default as LoadingOverlay } from './LoadingOverlay.vue';
-export { useAxiosLoading } from './loading';
+export { useAxiosLoading } from './loading.js';

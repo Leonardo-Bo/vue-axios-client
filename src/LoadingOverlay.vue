@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAxiosLoading } from './loading';
+import { useAxiosLoading } from './loading.js';
 
 const isLoading = useAxiosLoading();
 </script>

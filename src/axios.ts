@@ -3,8 +3,8 @@ import axios, {
     type InternalAxiosRequestConfig,
 } from 'axios';
 
-import { startAxiosLoading, stopAxiosLoading } from './loading';
-import { showSuccessToast } from './toast';
+import { startAxiosLoading, stopAxiosLoading } from './loading.js';
+import { showSuccessToast } from './toast.js';
 
 declare module 'axios' {
     interface AxiosRequestConfig {
