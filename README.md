@@ -219,7 +219,7 @@ git push
 A specific Git tag can be installed with:
 
 ```bash
-npm install github:Leonardo-Bo/vue-axios-client#v2.1.0
+npm install github:Leonardo-Bo/vue-axios-client#v2.1.1
 ```
 
 ## License
