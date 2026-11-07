@@ -117,33 +117,62 @@ await axios.post(
 
 The package automatically manages the global Axios loading state.
 
-Export the component:
-
-```ts
-import { LoadingOverlay } from 'vue-axios-client';
-```
-
-and display it in the application:
+Place the component once, usually in `App.vue`; it shows itself while requests are pending:
 
 ```vue
-<LoadingOverlay :visible="isLoading" />
+<script setup lang="ts">
+import { LoadingOverlay } from 'vue-axios-client';
+</script>
+
+<template>
+    <LoadingOverlay />
+</template>
 ```
 
-The loading state is available through:
+The loading state is also available as a ref:
 
 ```ts
 import { useAxiosLoading } from 'vue-axios-client';
 
-const { isLoading } = useAxiosLoading();
+const isLoading = useAxiosLoading();
 ```
 
-## Toast CSS
+## Toasts
 
-Import the package stylesheet once:
+The package has its own toasts, with no external dependency. Import the stylesheet once:
 
 ```css
 @import "vue-axios-client/style.css";
 ```
+
+They are used by `handleAxiosError` and `successToast`, and can be shown directly:
+
+```ts
+import {
+    showToast,
+    showSuccessToast,
+    showDangerToast,
+    showWarningToast,
+    showInfoToast,
+} from 'vue-axios-client';
+
+showSuccessToast('Saved.');
+showToast('Kept until closed', { type: 'info', timeout: 0 });
+```
+
+- Bottom right; success, warning and info close after 3 s, errors after 5 s.
+- The countdown pauses while the pointer is over a toast; every toast has a close button.
+- Messages are inserted as text, never as HTML.
+- Errors are announced to screen readers immediately (`role="alert"`), the others politely.
+- Colours and shape come from CSS variables that the application can redefine:
+  `--vac-toast-success`, `--vac-toast-danger`, `--vac-toast-warning`, `--vac-toast-info`,
+  `--vac-toast-default`, `--vac-toast-text`, `--vac-toast-radius`, `--vac-toast-font`.
+
+### From 1.x
+
+2.0 removes `mosha-vue-toastify`. `vue-axios-client/style.css` no longer contains its styles:
+an application that also calls `createToast` from `mosha-vue-toastify` directly must import
+`mosha-vue-toastify/dist/style.css` itself, or switch to the functions above.
 
 ## Development
 
@@ -154,10 +183,13 @@ npm install
 npm run build
 ```
 
-The compiled package is generated in:
+The compiled package is generated in `dist/`. Installing from GitHub builds it
+automatically (`prepare` script).
 
-```text
-dist/
+Tests:
+
+```bash
+npm test
 ```
 
 ## Release workflow
@@ -177,7 +209,7 @@ git push
 A specific Git tag can be installed with:
 
 ```bash
-npm install github:Leonardo-Bo/vue-axios-client#v1.0.0
+npm install github:Leonardo-Bo/vue-axios-client#v2.0.0
 ```
 
 ## License

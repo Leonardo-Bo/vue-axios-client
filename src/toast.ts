@@ -1,57 +1,108 @@
-import { createToast } from 'mosha-vue-toastify';
-import type { ToastOptions } from 'mosha-vue-toastify';
+export type ToastType = 'success' | 'danger' | 'warning' | 'info' | 'default';
 
-const toastSuccess: ToastOptions = {
-    type: 'success',
-    position: 'bottom-right',
-    timeout: 3000,
-    showIcon: true,
+export interface ToastOptions {
+    type?: ToastType;
+    /** Milliseconds before the toast closes by itself; 0 keeps it until closed. */
+    timeout?: number;
+}
+
+const DEFAULT_TIMEOUT: Record<ToastType, number> = {
+    success: 3000,
+    danger: 5000,
+    warning: 3000,
+    info: 3000,
+    default: 3000,
 };
 
-const toastDanger: ToastOptions = {
-    type: 'danger',
-    position: 'bottom-right',
-    timeout: 5000,
-    showIcon: true,
+const ICONS: Record<ToastType, string> = {
+    success: '✓',
+    danger: '!',
+    warning: '!',
+    info: 'i',
+    default: '',
 };
 
-const toastInfo: ToastOptions = {
-    type: 'info',
-    position: 'bottom-right',
-    timeout: 3000,
-    showIcon: true,
-};
+let container: HTMLElement | null = null;
 
-const toastDefault: ToastOptions = {
-    type: 'default',
-    position: 'bottom-right',
-    timeout: 3000,
-    showIcon: true,
-};
+function getContainer(): HTMLElement {
+    if (container && document.body.contains(container)) {
+        return container;
+    }
 
-const toastWarning: ToastOptions = {
-    type: 'warning',
-    position: 'bottom-right',
-    timeout: 3000,
-    showIcon: true,
-};
+    container = document.createElement('div');
+    container.className = 'vac-toasts';
+    document.body.appendChild(container);
 
-export const showSuccessToast = (message: string): void => {
-    createToast(message, toastSuccess);
-};
+    return container;
+}
 
-export const showDangerToast = (message: string): void => {
-    createToast(message, toastDanger);
-};
+export function closeToast(toast: HTMLElement): void {
+    toast.classList.add('vac-toast--leaving');
+    window.setTimeout(() => toast.remove(), 200);
+}
 
-export const showInfoToast = (message: string): void => {
-    createToast(message, toastInfo);
-};
+/**
+ * Show a toast and return its element.
+ *
+ * The message is always inserted as text, never as HTML: messages often come from API
+ * error responses. Errors are announced immediately to screen readers (role="alert"),
+ * the other types politely (role="status").
+ */
+export function showToast(message: string, options: ToastOptions = {}): HTMLElement {
+    const type = options.type ?? 'default';
+    const timeout = options.timeout ?? DEFAULT_TIMEOUT[type];
 
-export const showDefaultToast = (message: string): void => {
-    createToast(message, toastDefault);
-};
+    const toast = document.createElement('div');
+    toast.className = `vac-toast vac-toast--${type}`;
+    toast.setAttribute('role', type === 'danger' ? 'alert' : 'status');
 
-export const showWarningToast = (message: string): void => {
-    createToast(message, toastWarning);
-};
+    if (ICONS[type]) {
+        const icon = document.createElement('span');
+        icon.className = 'vac-toast__icon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = ICONS[type];
+        toast.appendChild(icon);
+    }
+
+    const text = document.createElement('span');
+    text.className = 'vac-toast__message';
+    text.textContent = message;
+    toast.appendChild(text);
+
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'vac-toast__close';
+    close.setAttribute('aria-label', 'Close');
+    close.textContent = '×';
+    close.addEventListener('click', () => closeToast(toast));
+    toast.appendChild(close);
+
+    if (timeout > 0) {
+        // The countdown pauses while the pointer is over the toast, so it can be read.
+        let timer = window.setTimeout(() => closeToast(toast), timeout);
+
+        toast.addEventListener('mouseenter', () => window.clearTimeout(timer));
+        toast.addEventListener('mouseleave', () => {
+            timer = window.setTimeout(() => closeToast(toast), timeout);
+        });
+    }
+
+    getContainer().appendChild(toast);
+
+    return toast;
+}
+
+export const showSuccessToast = (message: string): HTMLElement =>
+    showToast(message, { type: 'success' });
+
+export const showDangerToast = (message: string): HTMLElement =>
+    showToast(message, { type: 'danger' });
+
+export const showWarningToast = (message: string): HTMLElement =>
+    showToast(message, { type: 'warning' });
+
+export const showInfoToast = (message: string): HTMLElement =>
+    showToast(message, { type: 'info' });
+
+export const showDefaultToast = (message: string): HTMLElement =>
+    showToast(message, { type: 'default' });
