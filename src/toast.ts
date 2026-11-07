@@ -1,9 +1,25 @@
 export type ToastType = 'success' | 'danger' | 'warning' | 'info' | 'default';
 
+/** "tinted": soft background in the type's colour. "plain": white, colour only in the icon. */
+export type ToastStyle = 'tinted' | 'plain';
+
 export interface ToastOptions {
     type?: ToastType;
     /** Milliseconds before the toast closes by itself; 0 keeps it until closed. */
     timeout?: number;
+    /** Overrides the style set with configureToasts() for this toast only. */
+    style?: ToastStyle;
+}
+
+export interface ToastConfig {
+    style?: ToastStyle;
+}
+
+let defaultStyle: ToastStyle = 'tinted';
+
+/** Set the style of every toast in the application (default "tinted"). */
+export function configureToasts(config: ToastConfig): void {
+    defaultStyle = config.style ?? 'tinted';
 }
 
 const DEFAULT_TIMEOUT: Record<ToastType, number> = {
@@ -53,7 +69,9 @@ export function showToast(message: string, options: ToastOptions = {}): HTMLElem
     const timeout = options.timeout ?? DEFAULT_TIMEOUT[type];
 
     const toast = document.createElement('div');
-    toast.className = `vac-toast vac-toast--${type}`;
+    const style = options.style ?? defaultStyle;
+
+    toast.className = `vac-toast vac-toast--${type} vac-toast--${style}`;
     toast.setAttribute('role', type === 'danger' ? 'alert' : 'status');
 
     if (ICONS[type]) {

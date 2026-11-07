@@ -62,3 +62,20 @@ describe('toasts', () => {
         expect(sticky.isConnected).toBe(false);
     });
 });
+
+describe('toast style', () => {
+    it('is tinted by default, plain when configured, and can be overridden per toast', async () => {
+        const { configureToasts } = await import('../src/toast');
+
+        expect(showSuccessToast('a').classList.contains('vac-toast--tinted')).toBe(true);
+
+        configureToasts({ style: 'plain' });
+        expect(showSuccessToast('b').classList.contains('vac-toast--plain')).toBe(true);
+        expect(
+            showToast('c', { type: 'info', style: 'tinted' }).classList.contains('vac-toast--tinted'),
+        ).toBe(true);
+
+        configureToasts({});
+        expect(showSuccessToast('d').classList.contains('vac-toast--tinted')).toBe(true);
+    });
+});
