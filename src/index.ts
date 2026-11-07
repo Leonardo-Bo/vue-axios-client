@@ -13,12 +13,15 @@ export {
 export {
     showToast,
     closeToast,
+    configureToasts,
     showSuccessToast,
     showDangerToast,
     showWarningToast,
     showInfoToast,
     showDefaultToast,
+    type ToastConfig,
     type ToastOptions,
+    type ToastStyle,
     type ToastType,
 } from './toast';
 

@@ -164,9 +164,19 @@ showToast('Kept until closed', { type: 'info', timeout: 0 });
 - The countdown pauses while the pointer is over a toast; every toast has a close button.
 - Messages are inserted as text, never as HTML.
 - Errors are announced to screen readers immediately (`role="alert"`), the others politely.
+- Two styles: `tinted` (default; soft background in the type's colour) and `plain` (white,
+  colour only in the icon). Choose one for the whole application, or per toast:
+
+  ```ts
+  import { configureToasts } from 'vue-axios-client';
+
+  configureToasts({ style: 'plain' });
+  showToast('Saved.', { type: 'success', style: 'tinted' });
+  ```
 - Colours and shape come from CSS variables that the application can redefine:
   `--vac-toast-success`, `--vac-toast-danger`, `--vac-toast-warning`, `--vac-toast-info`,
-  `--vac-toast-default`, `--vac-toast-text`, `--vac-toast-radius`, `--vac-toast-font`.
+  `--vac-toast-default` (the colour of each type), `--vac-toast-text`,
+  `--vac-toast-background`, `--vac-toast-radius`, `--vac-toast-font`.
 
 ### From 1.x
 
@@ -209,7 +219,7 @@ git push
 A specific Git tag can be installed with:
 
 ```bash
-npm install github:Leonardo-Bo/vue-axios-client#v2.0.0
+npm install github:Leonardo-Bo/vue-axios-client#v2.1.0
 ```
 
 ## License

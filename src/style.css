@@ -1,12 +1,16 @@
-/* Toasts. Colours can be changed by redefining the variables in the application. */
+/*
+ * Toasts. The application can redefine these variables.
+ * --vac-toast-<type> is the colour of each type: icon, and tint of the "tinted" style.
+ */
 :root {
-    --vac-toast-success: #15803d;
-    --vac-toast-danger: #b91c1c;
-    --vac-toast-warning: #b45309;
-    --vac-toast-info: #1d4ed8;
-    --vac-toast-default: #374151;
-    --vac-toast-text: #ffffff;
-    --vac-toast-radius: 6px;
+    --vac-toast-success: #16a34a;
+    --vac-toast-danger: #dc2626;
+    --vac-toast-warning: #d97706;
+    --vac-toast-info: #2563eb;
+    --vac-toast-default: #4b5563;
+    --vac-toast-text: #1f2937;
+    --vac-toast-background: #ffffff;
+    --vac-toast-radius: 12px;
     --vac-toast-font: inherit;
 }
 
@@ -18,19 +22,21 @@
 
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
 
-    max-width: min(24rem, calc(100vw - 2rem));
+    width: min(22rem, calc(100vw - 2rem));
 }
 
 .vac-toast {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
+    --vac-toast-color: var(--vac-toast-default);
 
-    padding: 0.75rem 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+
+    padding: 0.8rem 0.9rem;
+    border: 1px solid;
     border-radius: var(--vac-toast-radius);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 
     color: var(--vac-toast-text);
     font-family: var(--vac-toast-font);
@@ -41,11 +47,35 @@
     transition: opacity 0.2s, transform 0.2s;
 }
 
-.vac-toast--success { background: var(--vac-toast-success); }
-.vac-toast--danger { background: var(--vac-toast-danger); }
-.vac-toast--warning { background: var(--vac-toast-warning); }
-.vac-toast--info { background: var(--vac-toast-info); }
-.vac-toast--default { background: var(--vac-toast-default); }
+.vac-toast--success { --vac-toast-color: var(--vac-toast-success); }
+.vac-toast--danger { --vac-toast-color: var(--vac-toast-danger); }
+.vac-toast--warning { --vac-toast-color: var(--vac-toast-warning); }
+.vac-toast--info { --vac-toast-color: var(--vac-toast-info); }
+.vac-toast--default { --vac-toast-color: var(--vac-toast-default); }
+
+/* Tinted (default): soft background and border in the type's colour, solid icon. */
+.vac-toast--tinted {
+    background: color-mix(in srgb, var(--vac-toast-color) 7%, var(--vac-toast-background));
+    border-color: color-mix(in srgb, var(--vac-toast-color) 28%, var(--vac-toast-background));
+    box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
+}
+
+.vac-toast--tinted .vac-toast__icon {
+    background: var(--vac-toast-color);
+    color: #ffffff;
+}
+
+/* Plain: white card, colour only in the icon. */
+.vac-toast--plain {
+    background: var(--vac-toast-background);
+    border-color: #e5e7eb;
+    box-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+}
+
+.vac-toast--plain .vac-toast__icon {
+    background: color-mix(in srgb, var(--vac-toast-color) 15%, var(--vac-toast-background));
+    color: var(--vac-toast-color);
+}
 
 .vac-toast--leaving {
     opacity: 0;
@@ -58,10 +88,9 @@
     align-items: center;
     justify-content: center;
 
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.4rem;
+    height: 1.4rem;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.25);
 
     font-weight: 700;
     font-size: 0.8rem;
@@ -74,20 +103,20 @@
 
 .vac-toast__close {
     flex: none;
-    padding: 0 0.2rem;
+    padding: 0.1rem 0.3rem;
     border: 0;
+    border-radius: 6px;
     background: none;
 
-    color: inherit;
-    font-size: 1.2rem;
+    color: #9ca3af;
+    font-size: 1.1rem;
     line-height: 1;
     cursor: pointer;
-    opacity: 0.8;
 }
 
 .vac-toast__close:hover,
 .vac-toast__close:focus-visible {
-    opacity: 1;
+    color: var(--vac-toast-text);
 }
 
 @keyframes vac-toast-in {
