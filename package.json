@@ -18,7 +18,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && cp src/style.css dist/style.css && cp src/LoadingOverlay.vue dist/LoadingOverlay.vue"
+    "build": "tsc && cp src/style.css dist/style.css && cp src/LoadingOverlay.vue dist/LoadingOverlay.vue",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "axios": "^1.0.0",
