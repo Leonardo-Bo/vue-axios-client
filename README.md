@@ -17,10 +17,9 @@ Provides:
 
 * Vue 3
 * Axios 1.x
-* Pinia 3.x
 * Vite
 
-Vue, Axios and Pinia are peer dependencies.
+Vue and Axios are peer dependencies.
 
 ## Installation
 

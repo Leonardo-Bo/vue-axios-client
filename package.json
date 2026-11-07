@@ -1,6 +1,6 @@
 {
   "name": "vue-axios-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reusable Axios HTTP client for Vue applications",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,6 @@
   },
   "peerDependencies": {
     "axios": "^1.0.0",
-    "pinia": "^3.0.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
