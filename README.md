@@ -117,7 +117,8 @@ await axios.post(
 
 The package automatically manages the global Axios loading state.
 
-Place the component once, usually in `App.vue`; it shows itself while requests are pending:
+Place the component once, usually in `App.vue`; it shows itself while requests are pending.
+Its styles are in `vue-axios-client/style.css` (see [Toasts](#toasts)):
 
 ```vue
 <script setup lang="ts">
@@ -127,6 +128,27 @@ import { LoadingOverlay } from 'vue-axios-client';
 <template>
     <LoadingOverlay />
 </template>
+```
+
+The overlay appears only when a request lasts more than 300 ms, so fast requests do not make it
+flash. The delay can be changed once for the application:
+
+```ts
+import { configureLoading } from 'vue-axios-client';
+
+configureLoading({ delay: 500 }); // 0 shows it immediately
+```
+
+A request that shows its own progress (an upload with a progress bar, polling a background
+task) can keep the overlay off, so the two never compete for the screen:
+
+```ts
+await axios.post('/api/import/', formData, {
+    loadingOverlay: false,
+    onUploadProgress: (event) => { /* own progress bar */ },
+});
+
+await axios.get(`/api/export/${taskId}/`, { loadingOverlay: false });
 ```
 
 The loading state is also available as a ref:
@@ -178,6 +200,17 @@ showToast('Kept until closed', { type: 'info', timeout: 0 });
   `--vac-toast-default` (the colour of each type), `--vac-toast-text`,
   `--vac-toast-background`, `--vac-toast-radius`, `--vac-toast-font`.
 
+### From 2.1
+
+2.2 compiles `LoadingOverlay` with the rest of the package (it was shipped as an uncompiled
+`.vue` file, which test runners such as Vitest could not load without extra configuration).
+Its styles moved to `vue-axios-client/style.css`: import it if the application did not
+already do so for the toasts.
+
+2.2 also shows the overlay only after 300 ms (before: immediately; `configureLoading({ delay: 0 })`
+restores it) and adds the `loadingOverlay: false` request option. An application that placed
+its own progress dialog above the overlay (`z-index` above 9999) can use that option instead.
+
 ### From 1.x
 
 2.0 removes `mosha-vue-toastify`. `vue-axios-client/style.css` no longer contains its styles:
@@ -219,7 +252,7 @@ git push
 A specific Git tag can be installed with:
 
 ```bash
-npm install github:Leonardo-Bo/vue-axios-client#v2.1.1
+npm install github:Leonardo-Bo/vue-axios-client#v2.2.0
 ```
 
 ## License

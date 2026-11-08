@@ -9,10 +9,34 @@ import { showSuccessToast } from './toast.js';
 declare module 'axios' {
     interface AxiosRequestConfig {
         successToast?: string;
+        /**
+         * false: this request does not show the global loading overlay, for requests that
+         * show their own progress (uploads with a progress bar, polling).
+         */
+        loadingOverlay?: boolean;
     }
 
     interface InternalAxiosRequestConfig {
         successToast?: string;
+        loadingOverlay?: boolean;
+    }
+}
+
+// Requests that turned the overlay on, so that only those turn it off again.
+const showingOverlay = new WeakSet<InternalAxiosRequestConfig>();
+
+function startOverlay(config: InternalAxiosRequestConfig): void {
+    if (config.loadingOverlay === false) {
+        return;
+    }
+
+    showingOverlay.add(config);
+    startAxiosLoading();
+}
+
+function stopOverlay(config: InternalAxiosRequestConfig | undefined): void {
+    if (config && showingOverlay.delete(config)) {
+        stopAxiosLoading();
     }
 }
 
@@ -62,14 +86,14 @@ export function configureAxios(config: AxiosClientConfig): AxiosInstance {
     });
 
     http.interceptors.request.use((config) => {
-        startAxiosLoading();
+        startOverlay(config);
 
         return addCsrfToken(config);
     });
 
     http.interceptors.response.use(
         (response) => {
-            stopAxiosLoading();
+            stopOverlay(response.config);
 
             if (response.config.successToast) {
                 showSuccessToast(response.config.successToast);
@@ -78,7 +102,7 @@ export function configureAxios(config: AxiosClientConfig): AxiosInstance {
             return response;
         },
         (error) => {
-            stopAxiosLoading();
+            stopOverlay(error?.config);
 
             return Promise.reject(error);
         },

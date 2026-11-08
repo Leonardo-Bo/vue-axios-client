@@ -25,5 +25,5 @@ export {
     type ToastType,
 } from './toast.js';
 
-export { default as LoadingOverlay } from './LoadingOverlay.vue';
-export { useAxiosLoading } from './loading.js';
+export { default as LoadingOverlay } from './LoadingOverlay.js';
+export { configureLoading, useAxiosLoading, type LoadingConfig } from './loading.js';
