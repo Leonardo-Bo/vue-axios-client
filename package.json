@@ -1,6 +1,6 @@
 {
   "name": "vue-axios-client",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Reusable Axios HTTP client for Vue applications",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,7 +18,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && cp src/style.css dist/style.css && cp src/LoadingOverlay.vue dist/LoadingOverlay.vue",
+    "build": "rm -rf dist && tsc && cp src/style.css dist/style.css",
     "prepare": "npm run build",
     "test": "vitest run --environment jsdom"
   },
